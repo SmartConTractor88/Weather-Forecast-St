@@ -19,22 +19,27 @@ st.subheader(f"{option} for the next {days} {day_word} in {place}:")
 
 if place: # only run further code when a place is chosen
 
-    filtered_data = get_data(place, days)
+    try:
 
-    # display the forecast
+        filtered_data = get_data(place, days)
 
-    if option == "Temperature":
-        temperatures = [dict["main"]["temp"] for dict in filtered_data]
-        dates = [dict["dt_txt"] for dict in filtered_data]
+        # display the forecast
 
-        figure = px.line(x=dates, y=temperatures, 
-                         labels={"x":"Date", "y":"Temperature (C)"})
-        st.plotly_chart(figure)
+        if option == "Temperature":
+            temperatures = [dict["main"]["temp"] / 10 for dict in filtered_data]
+            dates = [dict["dt_txt"] for dict in filtered_data]
+            figure = px.line(x=dates, y=temperatures, 
+                            labels={"x":"Date", "y":"Temperature (C)"})
+            st.plotly_chart(figure)
 
-    images = {"Clear":"images/clear.png","Clouds":"images/cloud.png",
-              "Rain":"images/rain.png","Snow":"images/snow.png"}
+        images = {"Clear":"images/clear.png","Clouds":"images/cloud.png",
+                "Rain":"images/rain.png","Snow":"images/snow.png"}
 
-    if option == "Sky":
-        sky_conditions = [dict["weather"][0]["main"] for dict in filtered_data]
-        image_paths = [images[condition] for condition in sky_conditions]
-        st.image(image_paths, width=88)
+        if option == "Sky":
+            sky_conditions = [dict["weather"][0]["main"] for dict in filtered_data]
+            image_paths = [images[condition] for condition in sky_conditions]
+            st.image(image_paths, width=88)
+
+    except KeyError: st.subheader("No such location found.")
+
+   
