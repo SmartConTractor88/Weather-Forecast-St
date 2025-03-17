@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+from backend import get_data
 
 st.title("Weather Forecast for the Coming Days")
 
@@ -15,11 +16,7 @@ option = st.selectbox("Select data to view",
 st.subheader(f"{option} for the next {days} {day_word} in {place}:")
 
 
-def get_data(days):
-    dates = ["1", "2", "3", "4", "5"]
-    temperatures = [20, 22, 20, 22, 20]
-    temperatures = [days * i for i in temperatures]
-    return dates, temperatures
+data = get_data(place, days, option)
 
 dates, temperatures = get_data(days)
 
